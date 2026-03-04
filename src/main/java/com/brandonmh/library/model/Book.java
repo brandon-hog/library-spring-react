@@ -13,6 +13,9 @@ public class Book {
     private String author;
     private boolean available = true;
 
+    public Book() {
+    }
+
     public Book(Long id, String title, String author, boolean available) {
         this.id = id;
         this.title = title;

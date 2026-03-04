@@ -15,6 +15,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Checkout> checkouts;
 
+    public User() {
+    }
+
     public User(Long id, String name, String email, List<Checkout> checkouts) {
         this.id = id;
         this.name = name;
