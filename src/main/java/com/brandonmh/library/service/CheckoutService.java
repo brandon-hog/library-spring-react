@@ -30,14 +30,21 @@ public class CheckoutService {
         Optional<User> user = userService.getUserById(userId);
         Optional<Book> book = bookService.getBookById(bookId);
 
+        // Validate the user and book exists, and they do not already have the book
         if (user.isEmpty() || book.isEmpty()) {
             throw new Exception("Either user or book does not exist.");
         }
 
+        if (checkoutRepo.existsByUserIdAndBookIdAndReturnDateIsNull(userId, bookId)) {
+            throw new Exception("The user already has this book.");
+        }
+
+        // Set data
         checkout.setBook(book.get());
         checkout.setUser(user.get());
         checkout.setCheckoutDate(new Date());
 
+        // Save to DB
         checkoutRepo.save(checkout);
 
         // To prevent infinite looping by Jackson mapper, wrap into dto
@@ -52,7 +59,7 @@ public class CheckoutService {
     }
 
     public CheckoutResponse returnBook(Long bookId, Long userId) throws Exception {
-        List<Checkout> checkouts = checkoutRepo.findByBook_IdAndUser_IdAndReturnDateIsNull(bookId, userId);
+        List<Checkout> checkouts = checkoutRepo.findByBookIdAndUserIdAndReturnDateIsNull(bookId, userId);
 
         if (checkouts.isEmpty()) {
             throw new Exception("No checkout records for book and user.");
