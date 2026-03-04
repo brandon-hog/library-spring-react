@@ -9,14 +9,21 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
+
     private String name;
+
     private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String role;
 
     @OneToMany(mappedBy = "user")
     private List<Checkout> checkouts;
 
-    public User() {
-    }
+    public User() {}
 
     public User(Long id, String name, String email, List<Checkout> checkouts) {
         this.id = id;
@@ -56,5 +63,21 @@ public class User {
 
     public void setCheckouts(List<Checkout> checkouts) {
         this.checkouts = checkouts;
+    }
+
+    public String getPassword() {
+        return password; 
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
