@@ -1,8 +1,11 @@
 package com.brandonmh.library.bootstrap;
 
 import com.brandonmh.library.model.Book;
+import com.brandonmh.library.model.User;
 import com.brandonmh.library.repository.BookRepository;
+import com.brandonmh.library.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,23 +17,38 @@ import java.util.Random;
 public class DatabaseSeeder implements CommandLineRunner {
 
     private final BookRepository bookRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder pwEncoder;
 
-    public DatabaseSeeder(BookRepository bookRepository) {
+    public DatabaseSeeder(BookRepository bookRepository, UserRepository userRepository, PasswordEncoder pwEncoder) {
         this.bookRepository = bookRepository;
+        this.userRepository = userRepository;
+        this.pwEncoder = pwEncoder;
     }
 
     @Override
     public void run(String... args) {
-        // Idempotency check: Only run the seeder if the table is completely empty.
-        // This prevents duplicating your dataset every time the application restarts.
+        if (userRepository.count() == 0) {
+            // Save a default user to I don't need to create one
+            User defaultUser = new User();
+            defaultUser.setName("Brandon");
+            defaultUser.setEmail("brandon.m.hoggatt@gmail.com");
+            defaultUser.setPassword(pwEncoder.encode("password123"));
+            defaultUser.setRole("USER");
+
+            userRepository.save(defaultUser);
+
+            System.out.println("Default user successfully created.");
+        }
+
+        // Prevent duplicating your dataset every time the application restarts.
         if (bookRepository.count() == 0) {
-            
             List<Book> booksToSeed = generateRandomBooks(50); // Generate 50 books
             
             // saveAll() is significantly more efficient than looping and calling save() individually.
             bookRepository.saveAll(booksToSeed);
             
-            System.out.println("✅ Database successfully seeded with " + booksToSeed.size() + " books.");
+            System.out.println("Database successfully seeded with " + booksToSeed.size() + " books.");
         }
     }
 
