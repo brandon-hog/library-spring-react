@@ -45,7 +45,10 @@ In the future, I hope to work more on this and include:
 React will be used for the frontend, and Java Spring Boot and Postgres are used for the backend.
 
 ## 2.1 Front-end
-TODO
+The frontend uses Vite along with React Router for navigating to different pages. Docs for both are linked below:
+- [Vite](https://vite.dev/guide/)
+- [React Router](https://reactrouter.com/start/data/routing)
+- Also [Tailwind](https://tailwindcss.com/docs/installation/using-vite) is used alongside some [ShadCN components](https://ui.shadcn.com/docs/components)
 
 ## 2.2 Back-end
 
