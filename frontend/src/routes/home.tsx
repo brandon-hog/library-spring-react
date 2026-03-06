@@ -53,9 +53,6 @@ export default function HomePage() {
             <button className="flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
               Browse Collection <ArrowRight size={20} />
             </button>
-            <button className="flex items-center justify-center gap-2 text-white bg-white border border-slate-200 px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition-all">
-              Admin Login
-            </button>
           </div>
         </div>
 
