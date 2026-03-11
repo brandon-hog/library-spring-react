@@ -1,10 +1,16 @@
 package com.brandonmh.library.service;
 
+import com.brandonmh.library.dto.LoginRequest;
 import com.brandonmh.library.dto.RegisterRequest;
+import com.brandonmh.library.dto.TokenPair;
 import com.brandonmh.library.dto.UserResponse;
 import com.brandonmh.library.model.User;
 import com.brandonmh.library.repository.UserRepository;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +22,19 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
-    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
+    public UserService(
+        UserRepository userRepo,
+        PasswordEncoder passwordEncoder,
+        JwtService jwtService,
+        AuthenticationManager authenticationManager
+    ) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
     @Transactional
@@ -45,6 +60,19 @@ public class UserService {
         userRes.role = savedUser.getRole();
 
         return userRes;
+    }
+    
+    public TokenPair login(LoginRequest loginRequest) {
+        // Authenticate the user
+        Authentication auth = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+        );
+
+        // Set the authentication in the security context
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        // Generate the token pair
+        return jwtService.generateTokenPair(auth);
     }
 
     public User update(Long id, User user) {
