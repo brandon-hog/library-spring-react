@@ -25,7 +25,10 @@ public class BookService {
         return bookRepo.findAll();
     }
 
-    public Page<Book> getBooks(Pageable pageable) {
+    public Page<Book> getBooks(Pageable pageable, String search) {
+        if (search != null && !search.isEmpty()) {
+            return bookRepo.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(search, pageable);
+        }
         return bookRepo.findAll(pageable);
     }
 

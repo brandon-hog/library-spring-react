@@ -29,8 +29,11 @@ public class BookController {
     }
 
     @GetMapping
-    public Page<Book> getAllBooks(@PageableDefault(size = 20) Pageable pageable) {
-        return bookService.getBooks(pageable);
+    public Page<Book> getAllBooks(
+        @PageableDefault(size = 20) Pageable pageable,
+        @RequestParam(required = false) String search
+    ) {
+        return bookService.getBooks(pageable, search);
     }
 
     @GetMapping("/{id}")
