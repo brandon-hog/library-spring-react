@@ -81,7 +81,7 @@ export default function AppLayout() {
         <div className="px-4 pb-4 pt-2 border-t border-slate-800">
           <Button
             variant="outline"
-            className="w-full justify-center border-slate-700 text-slate-100 hover:bg-slate-800 hover:text-white"
+            className="w-full justify-center bg-black border-none"
             onClick={handleLogout}
           >
             Log out
@@ -90,7 +90,7 @@ export default function AppLayout() {
       </aside>
 
       <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-5xl px-6 py-6">
+        <div className="mx-auto w-full h-full px-6 py-6">
           <Outlet />
         </div>
       </main>

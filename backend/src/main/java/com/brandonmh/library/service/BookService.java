@@ -2,6 +2,8 @@ package com.brandonmh.library.service;
 
 import com.brandonmh.library.model.Book;
 import com.brandonmh.library.repository.BookRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,10 @@ public class BookService {
 
     public List<Book> getAllBooks() {
         return bookRepo.findAll();
+    }
+
+    public Page<Book> getBooks(Pageable pageable) {
+        return bookRepo.findAll(pageable);
     }
 
     public Optional<Book> getBookById(Long id) {

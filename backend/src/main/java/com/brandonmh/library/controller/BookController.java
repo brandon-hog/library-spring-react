@@ -5,13 +5,14 @@ import com.brandonmh.library.dto.CheckoutResponse;
 import com.brandonmh.library.service.BookService;
 import com.brandonmh.library.service.CheckoutService;
 import com.brandonmh.library.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/book")
@@ -28,8 +29,8 @@ public class BookController {
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    public Page<Book> getAllBooks(@PageableDefault(size = 20) Pageable pageable) {
+        return bookService.getBooks(pageable);
     }
 
     @GetMapping("/{id}")
