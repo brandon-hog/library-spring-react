@@ -133,7 +133,7 @@ export default function HomePage() {
           <div className="flex gap-6 text-slate-400 text-sm">
             {/* TODO add in links to the documentation and github */}
             <a href="#" className="hover:text-blue-600">API Documentation</a>
-            <a href="#" className="hover:text-blue-600">GitHub</a>
+            <a href="https://github.com/brandon-hog/library-spring-react" className="hover:text-blue-600">GitHub</a>
           </div>
         </div>
       </footer>
