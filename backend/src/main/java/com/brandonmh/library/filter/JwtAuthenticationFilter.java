@@ -65,9 +65,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getJwtFromRequest(HttpServletRequest req) {
         // Check they are using JWT Cookie
         final Cookie[] accessTokenCookie = req.getCookies();
-        for (Cookie cookie : accessTokenCookie) {
-            if (cookie.getName().equals("accessToken")) {
-                return cookie.getValue();
+        if (accessTokenCookie != null) {
+            for (Cookie cookie : accessTokenCookie) {
+                if (cookie.getName().equals("accessToken")) {
+                    return cookie.getValue();
+                }
             }
         }
         

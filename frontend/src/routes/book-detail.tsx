@@ -43,11 +43,15 @@ export default function BookDetailPage() {
     setUpdating(true);
     setError(null);
     try {
-      const endpoint = book.available
-        ? `/book/${book.id}/checkout`
-        : `/book/${book.id}/checkin`;
-      const response = await api.post<Book>(endpoint);
-      setBook(response.data);
+      if (book.available) {
+        // Check out book - POST /api/book/{id}/checkout
+        await api.post(`/book/${book.id}/checkout`);
+        setBook({ ...book, available: false });
+      } else {
+        // Check in book - DELETE /api/book/{id}/checkout
+        await api.delete(`/book/${book.id}/checkout`);
+        setBook({ ...book, available: true });
+      }
     } catch (err) {
       setError("Failed to update book status.");
     } finally {
