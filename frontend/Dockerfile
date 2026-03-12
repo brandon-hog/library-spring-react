@@ -55,7 +55,7 @@ FROM nginx:alpine as final
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
 # Optional: Copy a custom nginx config if you use React Router (for SPA routing)
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
