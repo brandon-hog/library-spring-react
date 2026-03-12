@@ -110,4 +110,8 @@ public class JwtService {
         String accessToken = generateAccessToken(auth);
 		return new Token(accessToken);
     }
+
+    public long getJwtExpirationMs() {
+        return jwtExpiration;
+    }
 }
