@@ -40,7 +40,6 @@ export default function AppLayout() {
     location.pathname.startsWith("/my-book");
 
   const handleLogout = async () => {
-    // If you add a backend logout endpoint, call it here.
     navigate("/login");
   };
 
@@ -49,8 +48,10 @@ export default function AppLayout() {
   }
 
   return (
-    <div className="min-h-screen flex bg-slate-50 text-slate-900">
-      <aside className="flex h-screen w-64 flex-col border-r border-slate-800 bg-slate-900 text-slate-100">
+    // Added w-full to ensure the top-level div forces full viewport width
+    <div className="min-h-screen flex w-full bg-slate-50 text-slate-900">
+      {/* Added shrink-0 to prevent the fixed 16rem (64) width from collapsing */}
+      <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-slate-800 bg-slate-900 text-slate-100">
         <div className="flex items-center gap-2 px-4 py-4 border-b border-slate-800">
           <div className="bg-blue-600 p-2 rounded-lg">
             <Library className="text-white" size={20} />
@@ -90,11 +91,10 @@ export default function AppLayout() {
       </aside>
 
       <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto w-full h-full px-6 py-6">
+        <div className="w-full h-full">
           <Outlet />
         </div>
       </main>
     </div>
   );
 }
-

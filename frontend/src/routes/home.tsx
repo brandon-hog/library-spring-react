@@ -5,6 +5,7 @@ import {
   Library,
   Users,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function HomePage() {
   return (
@@ -50,9 +51,9 @@ export default function HomePage() {
             A high-performance, full-stack solution for modern book circulation. Powered by Java Spring Boot and React Vite.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+            <Link to="/book" className="flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
               Browse Collection <ArrowRight size={20} />
-            </button>
+            </Link>
           </div>
         </div>
 
