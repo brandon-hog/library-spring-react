@@ -36,6 +36,22 @@ public class BookController {
         return bookService.getBooks(pageable, search, search);
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<?> getMyBooks() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String email = auth.getName();
+
+            Long userId = userService.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getId();
+
+            return ResponseEntity.ok(checkoutService.getActiveBooksForUser(userId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
         return bookService.getBookById(id)

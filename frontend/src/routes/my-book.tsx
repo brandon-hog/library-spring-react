@@ -20,7 +20,7 @@ export default function MyBookPage() {
   useEffect(() => {
     const fetchMyBooks = async () => {
       try {
-        const response = await api.get<Book[]>("/my-book");
+        const response = await api.get<Book[]>("/book/my");
         setBooks(response.data);
       } catch (err) {
         setError("Failed to load your books.");
@@ -54,12 +54,12 @@ export default function MyBookPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 p-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
           My checked out books
         </h1>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 mt-2">
           These are the books currently checked out under your account.
         </p>
       </div>

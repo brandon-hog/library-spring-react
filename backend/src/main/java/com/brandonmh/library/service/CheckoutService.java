@@ -8,6 +8,7 @@ import com.brandonmh.library.repository.CheckoutRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,6 +80,14 @@ public class CheckoutService {
         checkoutRes.userId = checkout.getUser().getId();
 
         return checkoutRes;
+    }
+
+    public List<Book> getActiveBooksForUser(Long userId) {
+        List<Checkout> checkouts = checkoutRepo.findByUserIdAndReturnDateIsNull(userId);
+
+        return checkouts.stream()
+            .map(Checkout::getBook)
+            .collect(Collectors.toList());
     }
 
     public List<Checkout> getAllCheckouts() {
