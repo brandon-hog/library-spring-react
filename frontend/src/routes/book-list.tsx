@@ -68,17 +68,10 @@ export default function BookListPage() {
     return <p className="text-sm text-red-500 p-4">{error}</p>;
   }
 
-  if (!books.length) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <p className="text-sm text-slate-500">No books available.</p>
-      </div>
-    );
-  }
-
   return (
-    // Replaced m-4 on children with p-4 on the parent to avoid 100% width + margin layout breaking
     <div className="flex flex-col h-full w-full p-4">
+
+      {/* Header area */}
       <div className="flex w-full justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Books</h1>
@@ -87,17 +80,31 @@ export default function BookListPage() {
           </p>
         </div>
         <div>
-          <form onSubmit={(e) => {setSearch(e.target.value)}} className="flex w-full max-w-sm items-center space-x-2">
+          <form 
+            className="flex w-full max-w-sm items-center space-x-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target);
+              const search = formData.get("search")?.valueOf() as string;
+              setSearch(search || "");
+            }} 
+          >
             <Input
-              type="search" // Provides a native clear 'x' button in some browsers
+              name="search"
+              type="search"
               placeholder="Search for a book..."
-              onChange={(e) => setSearch(e.target.value)}
-              value={search}
             />
             <Button type="submit">Search</Button>
           </form>
         </div>
       </div>
+
+      {/* Book list area */}
+      {!books.length &&
+        <div className="flex h-full items-center justify-center">
+          <p className="text-sm text-slate-500">No books available.</p>
+        </div>
+      }
 
       <div className="flex h-full flex-col space-y-4 w-full">
         <div className="grid flex-1 h-full w-full content-start gap-4 grid-cols-3">
@@ -105,30 +112,29 @@ export default function BookListPage() {
             <BookCard key={book.id} book={book} />
           ))}
         </div>
+      </div>
+        
+      {/* Pagination area */}
+      <div className="flex items-center justify-between p-3 mt-4 rounded-md">
+        <Button
+          size="sm"
+          onClick={handlePrevious}
+          disabled={page === 0}
+        >
+          Previous
+        </Button>
 
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between p-3 mt-4 rounded-md">
-            <Button
-              size="sm"
-              onClick={handlePrevious}
-              disabled={page === 0}
-            >
-              Previous
-            </Button>
+        <span className="text-xl font-bold tracking-tighter text-black">
+          Page {books.length > 0 ? page + 1 : 0} of {totalPages}
+        </span>
 
-            <span className="text-xl font-bold tracking-tighter text-black">
-              Page {page + 1} of {totalPages}
-            </span>
-
-            <Button
-              size="sm"
-              onClick={handleNext}
-              disabled={page >= totalPages - 1}
-            >
-              Next
-            </Button>
-          </div>
-        )}
+        <Button
+          size="sm"
+          onClick={handleNext}
+          disabled={page >= totalPages - 1}
+        >
+          Next
+        </Button>
       </div>
     </div>
   );
