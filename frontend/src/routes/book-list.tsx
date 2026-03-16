@@ -93,6 +93,7 @@ export default function BookListPage() {
               name="search"
               type="search"
               placeholder="Search for a book..."
+              defaultValue={search || ""}
             />
             <Button type="submit">Search</Button>
           </form>
