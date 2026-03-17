@@ -58,13 +58,13 @@ export default function HomePage() {
         </div>
 
         <div className="relative">
-          <div className="absolute -inset-4 bg-blue-100/50 rounded-full blur-3xl"></div>
-          <div className="relative bg-white border border-slate-200 p-4 rounded-2xl shadow-2xl">
-            <img 
-              src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=1000" 
-              alt="Modern Library" 
-              className="rounded-xl shadow-inner"
-            />
+          <div className="flex items-center justify-center">
+            <div className="mx-auto mb-6 inline-flex items-center justify-center rounded-2xl bg-blue-600 p-5 shadow-lg shadow-blue-600/25">
+              <Library className="text-white" size={108} />
+            </div>
+            <div className="text-5xl md:text-6xl font-extrabold tracking-tight text-black">
+              LibStream
+            </div>
           </div>
         </div>
       </header>
