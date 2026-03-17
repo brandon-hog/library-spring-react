@@ -14,6 +14,7 @@ import com.brandonmh.library.service.JwtService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -29,18 +30,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws IOException, ServletException {
-        // Check they are using JWT
-        final String authHeader = req.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith(JwtService.TOKEN_PREFIX)) {
-            // Pass the request down the filter chain
+        final String username;
+        final String jwt = getJwtFromRequest(req);
+
+        // If they are not using JWT, pass the request down the filter chain
+        if (jwt == null) {
             filterChain.doFilter(req, res);
             return;
         }
 
-        final String jwt;
-        final String username;
-
-        jwt = getJwtFromRequest(req);
         username = jwtService.extractUsernameFromToken(jwt);
 
         // Make sure they aren't already authenticated
@@ -65,7 +63,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getJwtFromRequest(HttpServletRequest req) {
-        final String authHeader = req.getHeader("Authorization");
+        // Check they are using JWT Cookie
+        final Cookie[] accessTokenCookie = req.getCookies();
+        if (accessTokenCookie != null) {
+            for (Cookie cookie : accessTokenCookie) {
+                if (cookie.getName().equals("accessToken")) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        
+        // If they are not using Cookie, check for JWT Header
+        String authHeader = req.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith(JwtService.TOKEN_PREFIX)) {
+            return null;
+        }
         // Bearer <token> - token starts at index 7
         return authHeader.substring(7);
     }

@@ -91,4 +91,8 @@ public class UserService {
     public Optional<User> getUserById(Long id) {
         return userRepo.findById(id);
     }
+
+    public Optional<User> getUserByEmail(String email) {
+        return userRepo.findByEmail(email);
+    }
 }

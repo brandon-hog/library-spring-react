@@ -26,6 +26,8 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation "org.springframework.boot:spring-boot-starter-security"
 	runtimeOnly 'org.postgresql:postgresql'
+	// Source: https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1'
 	// Source: https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
 	implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
 	// Source: https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
