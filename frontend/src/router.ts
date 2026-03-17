@@ -6,6 +6,9 @@ import LoginPage from "./routes/login";
 import BookListPage from "./routes/book-list";
 import BookDetailPage from "./routes/book-detail";
 import MyBookPage from "./routes/my-book.tsx";
+import AdminBooksPage from "./routes/admin-books";
+import AdminBookEditPage from "./routes/admin-book-edit";
+import AdminCheckoutLogPage from "./routes/admin-checkout-log";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +38,18 @@ export const router = createBrowserRouter([
       {
         path: "my-book",
         Component: MyBookPage,
+      },
+      {
+        path: "admin/books",
+        Component: AdminBooksPage,
+      },
+      {
+        path: "admin/books/:id",
+        Component: AdminBookEditPage,
+      },
+      {
+        path: "admin/checkouts",
+        Component: AdminCheckoutLogPage,
       },
     ],
   },

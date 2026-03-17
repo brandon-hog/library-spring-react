@@ -1,8 +1,17 @@
 import { Outlet, useLocation, useNavigate, Link } from "react-router-dom";
-import { Library, BookOpen, BookmarkCheck, LogOut } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Library,
+  BookOpen,
+  BookmarkCheck,
+  LogOut,
+  Shield,
+  ClipboardList,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { fetchMe, type MeResponse } from "@/api/auth";
 import {
   Sidebar,
   SidebarContent,
@@ -23,7 +32,20 @@ export default function AppLayout() {
 
   const isAppRoute =
     location.pathname.startsWith("/book") ||
-    location.pathname.startsWith("/my-book");
+    location.pathname.startsWith("/my-book") ||
+    location.pathname.startsWith("/admin");
+
+  const [me, setMe] = useState<MeResponse | null>(null);
+  const isAdmin = useMemo(() => me?.role === "ADMIN", [me?.role]);
+
+  useEffect(() => {
+    if (!isAppRoute) return;
+    fetchMe()
+      .then(setMe)
+      .catch(() => {
+        setMe(null);
+      });
+  }, [isAppRoute]);
 
   const handleLogout = async () => {
     navigate("/login");
@@ -86,6 +108,50 @@ export default function AppLayout() {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
+
+            {isAdmin && (
+              <>
+                <SidebarMenuItem className="mx-2 pt-2">
+                  <div className="px-2 text-xs text-slate-400 group-data-[state=collapsed]/sidebar-provider:hidden">
+                    Admin
+                  </div>
+                </SidebarMenuItem>
+                <SidebarMenuItem className="mx-2">
+                  <SidebarMenuButton
+                    asChild
+                    isActive={location.pathname.startsWith("/admin/books")}
+                    tooltip="Admin Books"
+                    className={cn(
+                      "text-slate-200 hover:bg-slate-800/80 hover:text-white data-[active=true]:bg-slate-800 data-[active=true]:text-white"
+                    )}
+                  >
+                    <Link to="/admin/books">
+                      <Shield className="h-4 w-4 shrink-0" />
+                      <span className="group-data-[state=collapsed]/sidebar-provider:hidden">
+                        Manage Books
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem className="mx-2">
+                  <SidebarMenuButton
+                    asChild
+                    isActive={location.pathname.startsWith("/admin/checkouts")}
+                    tooltip="Checkout Log"
+                    className={cn(
+                      "text-slate-200 hover:bg-slate-800/80 hover:text-white data-[active=true]:bg-slate-800 data-[active=true]:text-white"
+                    )}
+                  >
+                    <Link to="/admin/checkouts">
+                      <ClipboardList className="h-4 w-4 shrink-0" />
+                      <span className="group-data-[state=collapsed]/sidebar-provider:hidden">
+                        Checkout Log
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </>
+            )}
           </SidebarMenu>
         </SidebarContent>
 

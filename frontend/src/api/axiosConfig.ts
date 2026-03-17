@@ -26,7 +26,7 @@ api.interceptors.response.use(
         // Using window.location.href performs a hard redirect.
         // This is preferred for auth failures as it completely clears the SPA memory state,
         // ensuring no sensitive user data remains in memory.
-        window.location.href = '/login';
+        //window.location.href = '/login';
       }
     }
     

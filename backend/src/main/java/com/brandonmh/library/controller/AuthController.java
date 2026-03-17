@@ -3,6 +3,7 @@ package com.brandonmh.library.controller;
 import com.brandonmh.library.dto.LoginRequest;
 import com.brandonmh.library.dto.RegisterRequest;
 import com.brandonmh.library.dto.Token;
+import com.brandonmh.library.dto.UserResponse;
 import com.brandonmh.library.service.JwtService;
 import com.brandonmh.library.service.UserService;
 
@@ -10,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -49,5 +52,25 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> me() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String email = auth.getName();
+
+            var user = userService.getUserByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+            UserResponse res = new UserResponse();
+            res.id = user.getId();
+            res.name = user.getName();
+            res.email = user.getEmail();
+            res.role = user.getRole();
+
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
     }
 }
