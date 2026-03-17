@@ -1,35 +1,21 @@
 import { Outlet, useLocation, useNavigate, Link } from "react-router-dom";
-import { Library, BookOpen, BookmarkCheck } from "lucide-react";
+import { Library, BookOpen, BookmarkCheck, LogOut } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-function SidebarLink({
-  to,
-  label,
-  icon,
-  isActive,
-}: {
-  to: string;
-  label: string;
-  icon: React.ReactNode;
-  isActive: boolean;
-}) {
-  return (
-    <Link
-      to={to}
-      className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-        isActive
-          ? "bg-slate-800 text-white"
-          : "text-slate-200 hover:bg-slate-800/80 hover:text-white"
-      )}
-    >
-      <span className="h-4 w-4">{icon}</span>
-      <span>{label}</span>
-    </Link>
-  );
-}
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 
 export default function AppLayout() {
   const location = useLocation();
@@ -48,53 +34,92 @@ export default function AppLayout() {
   }
 
   return (
-    // Added w-full to ensure the top-level div forces full viewport width
-    <div className="min-h-screen flex w-full bg-slate-50 text-slate-900">
-      {/* Added shrink-0 to prevent the fixed 16rem (64) width from collapsing */}
-      <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-slate-800 bg-slate-900 text-slate-100">
-        <div className="flex items-center gap-2 px-4 py-4 border-b border-slate-800">
-          <div className="bg-blue-600 p-2 rounded-lg">
-            <Library className="text-white" size={20} />
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader className="border-b border-slate-800 bg-slate-900">
+          <div className="flex  items-center gap-2">
+            <div className="bg-blue-600 p-2 rounded-lg">
+              <Library className="text-white" size={20} />
+            </div>
+            <div className="flex flex-col group-data-[state=collapsed]/sidebar-provider:hidden">
+              <span className="text-white text-sm font-semibold tracking-tight">
+                LibStream
+              </span>
+              <span className="text-xs text-slate-400">Library Console</span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold tracking-tight">
-              LibStream
-            </span>
-            <span className="text-xs text-slate-400">Library Console</span>
-          </div>
-        </div>
+        </SidebarHeader>
 
-        <nav className="flex-1 px-3 py-4 space-y-1">
-          <SidebarLink
-            to="/book"
-            label="All Books"
-            icon={<BookOpen className="h-4 w-4" />}
-            isActive={location.pathname === "/book"}
-          />
-          <SidebarLink
-            to="/my-book"
-            label="My Books"
-            icon={<BookmarkCheck className="h-4 w-4" />}
-            isActive={location.pathname.startsWith("/my-book")}
-          />
-        </nav>
+        <SidebarContent className="space-y-1 bg-slate-900">
+          <SidebarMenu className="flex flex-col gap-2 justify-center">
+            <SidebarMenuItem className="mt-2 mx-2">
+              <SidebarMenuButton
+                asChild
+                isActive={location.pathname === "/book"}
+                tooltip="All Books"
+                className={cn(
+                  "text-slate-200 hover:bg-slate-800/80 hover:text-white data-[active=true]:bg-slate-800 data-[active=true]:text-white"
+                )}
+              >
+                <Link to="/book">
+                  <BookOpen className="h-4 w-4 shrink-0" />
+                  <span className="group-data-[state=collapsed]/sidebar-provider:hidden">
+                    All Books
+                  </span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem className="mx-2">
+              <SidebarMenuButton
+                asChild
+                isActive={location.pathname.startsWith("/my-book")}
+                tooltip="My Books"
+                className={cn(
+                  "text-slate-200 hover:bg-slate-800/80 hover:text-white data-[active=true]:bg-slate-800 data-[active=true]:text-white"
+                )}
+              >
+                <Link to="/my-book">
+                  <BookmarkCheck className="h-4 w-4 shrink-0" />
+                  <span className="group-data-[state=collapsed]/sidebar-provider:hidden">
+                    My Books
+                  </span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
 
-        <div className="px-4 pb-4 pt-2 border-t border-slate-800">
+        <SidebarFooter className="border-t border-slate-800 bg-slate-900">
           <Button
             variant="outline"
-            className="w-full justify-center bg-black border-none"
+            className="w-full justify-center bg-black border-none group-data-[state=collapsed]/sidebar-provider:px-0"
             onClick={handleLogout}
           >
-            Log out
+            <LogOut className="h-4 w-4 shrink-0 text-white" />
+            <span className="text-white group-data-[state=collapsed]/sidebar-provider:hidden">
+              Log out
+            </span>
           </Button>
-        </div>
-      </aside>
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
 
-      <main className="flex-1 overflow-y-auto">
-        <div className="w-full h-full">
-          <Outlet />
-        </div>
-      </main>
-    </div>
+      <SidebarInset className="min-w-0 flex flex-col">
+        <header className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b border-slate-200 bg-white/80 px-3 backdrop-blur supports-backdrop-filter:bg-white/60">
+          <SidebarTrigger />
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-sm font-semibold text-slate-700">
+              Library Console
+            </div>
+          </div>
+        </header>
+
+        <main className="min-w-0 flex-1 overflow-y-auto">
+          <div className="w-full h-full">
+            <Outlet />
+          </div>
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
