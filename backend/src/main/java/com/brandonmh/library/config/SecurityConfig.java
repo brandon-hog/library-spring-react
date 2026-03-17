@@ -75,6 +75,11 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				// Auth endpoints and Swagger UI are permitted
                 .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+				// Admin-only endpoints
+				.requestMatchers("/api/admin/**").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.POST, "/api/book").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.PUT, "/api/book/**").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.DELETE, "/api/book/**").hasRole("ADMIN")
 				.anyRequest().authenticated()
 			)
 			.authenticationProvider(authenticationProvider())

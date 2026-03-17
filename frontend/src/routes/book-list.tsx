@@ -125,7 +125,7 @@ export default function BookListPage() {
           Previous
         </Button>
 
-        <span className="text-xl font-bold tracking-tighter text-black">
+        <span className="text-sm text-slate-700">
           Page {books.length > 0 ? page + 1 : 0} of {totalPages}
         </span>
 
