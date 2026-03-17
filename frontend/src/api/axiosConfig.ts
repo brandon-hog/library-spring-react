@@ -16,7 +16,6 @@ api.interceptors.response.use(
   },
   (error) => {
     // Intercepts errors before they reach your React components
-    console.log(error);
     if (error.response) {
       const status = error.response.status;
 

@@ -8,6 +8,7 @@ import java.util.List;
 @Repository
 public interface CheckoutRepository extends JpaRepository<Checkout, Long> {
     public List<Checkout> findByBookIdAndUserIdAndReturnDateIsNull(Long bookId, Long userId);
+    public boolean existsByBookIdAndReturnDateIsNull(Long bookId);
     public boolean existsByUserIdAndBookIdAndReturnDateIsNull(Long userId, Long bookId);
     public List<Checkout> findByUserIdAndReturnDateIsNull(Long userId);
 }

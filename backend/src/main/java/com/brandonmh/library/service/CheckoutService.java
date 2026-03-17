@@ -6,6 +6,7 @@ import com.brandonmh.library.model.Checkout;
 import com.brandonmh.library.model.User;
 import com.brandonmh.library.repository.CheckoutRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ public class CheckoutService {
         this.userService = userService;
     }
 
+    @Transactional
     public CheckoutResponse checkoutBook(Long bookId, Long userId) throws Exception {
         Checkout checkout = new Checkout();
 
@@ -36,9 +38,20 @@ public class CheckoutService {
             throw new Exception("Either user or book does not exist.");
         }
 
+        if (!book.get().isAvailable()) {
+            throw new Exception("Book is not available.");
+        }
+
+        if (checkoutRepo.existsByBookIdAndReturnDateIsNull(bookId)) {
+            throw new Exception("Book is already checked out.");
+        }
+
         if (checkoutRepo.existsByUserIdAndBookIdAndReturnDateIsNull(userId, bookId)) {
             throw new Exception("The user already has this book.");
         }
+
+        book.get().setAvailable(false);
+        bookService.updateBook(bookId, book.get());
 
         // Set data
         checkout.setBook(book.get());
@@ -59,6 +72,7 @@ public class CheckoutService {
         return checkoutRes;
     }
 
+    @Transactional
     public CheckoutResponse returnBook(Long bookId, Long userId) throws Exception {
         List<Checkout> checkouts = checkoutRepo.findByBookIdAndUserIdAndReturnDateIsNull(bookId, userId);
 
@@ -70,6 +84,12 @@ public class CheckoutService {
 
         checkout.setReturnDate(new Date());
         checkoutRepo.save(checkout);
+
+        Book book = checkout.getBook();
+        if (book != null) {
+            book.setAvailable(true);
+            bookService.updateBook(book.getId(), book);
+        }
 
         // To prevent infinite looping by Jackson mapper, wrap into dto
         CheckoutResponse checkoutRes = new CheckoutResponse();

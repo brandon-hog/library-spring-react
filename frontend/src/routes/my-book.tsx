@@ -33,16 +33,16 @@ export default function MyBookPage() {
   }, []);
 
   if (loading) {
-    return <p className="text-sm text-slate-500">Loading your books...</p>;
+    return <p className="text-sm text-slate-500 p-4">Loading your books...</p>;
   }
 
   if (error) {
-    return <p className="text-sm text-red-500">{error}</p>;
+    return <p className="text-sm text-red-500 p-4">{error}</p>;
   }
 
   if (!books.length) {
     return (
-      <div className="space-y-2">
+      <div className="space-y-2 p-4">
         <h1 className="text-2xl font-semibold tracking-tight">
           My checked out books
         </h1>

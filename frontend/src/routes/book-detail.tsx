@@ -17,6 +17,7 @@ export default function BookDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [book, setBook] = useState<Book | null>(null);
+  const [userHasBook, setUserHasBook] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
@@ -25,8 +26,16 @@ export default function BookDetailPage() {
     const fetchBook = async () => {
       if (!id) return;
       try {
-        const response = await api.get<Book>(`/book/${id}`);
-        setBook(response.data);
+        const [bookRes, myBooksRes] = await Promise.all([
+          api.get<Book>(`/book/${id}`),
+          api.get<Book[]>("/book/my"),
+        ]);
+        setBook(bookRes.data);
+        const idNum = Number(id);
+        setUserHasBook(
+          Number.isFinite(idNum) &&
+            myBooksRes.data.some((b) => b.id === idNum)
+        );
       } catch (err) {
         setError("Failed to load book.");
       } finally {
@@ -37,23 +46,33 @@ export default function BookDetailPage() {
     fetchBook();
   }, [id]);
 
-  const handleToggleStatus = async () => {
+  const handleCheckout = async () => {
     if (!book) return;
 
     setUpdating(true);
     setError(null);
     try {
-      if (book.available) {
-        // Check out book - POST /api/book/{id}/checkout
-        await api.post(`/book/${book.id}/checkout`);
-        setBook({ ...book, available: false });
-      } else {
-        // Check in book - DELETE /api/book/{id}/checkout
-        await api.delete(`/book/${book.id}/checkout`);
-        setBook({ ...book, available: true });
-      }
+      await api.post(`/book/${book.id}/checkout`);
+      setBook({ ...book, available: false });
+      setUserHasBook(true);
     } catch (err) {
-      setError("Failed to update book status.");
+      setError("Failed to check out book.");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleCheckin = async () => {
+    if (!book) return;
+
+    setUpdating(true);
+    setError(null);
+    try {
+      await api.delete(`/book/${book.id}/checkout`);
+      setBook({ ...book, available: true });
+      setUserHasBook(false);
+    } catch (err) {
+      setError("Failed to check in book.");
     } finally {
       setUpdating(false);
     }
@@ -106,17 +125,25 @@ export default function BookDetailPage() {
           </div>
 
           <div className="flex flex-col items-end gap-2">
-            <Button
-              onClick={handleToggleStatus}
-              disabled={updating}
-              variant={book.available ? "default" : "outline"}
-            >
-              {updating
-                ? "Updating..."
-                : book.available
-                ? "Check out book"
-                : "Check in book"}
-            </Button>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Button
+                onClick={handleCheckout}
+                disabled={updating || !book.available || userHasBook}
+                variant="default"
+              >
+                {updating ? "Updating..." : "Check out"}
+              </Button>
+              <Button
+                onClick={handleCheckin}
+                disabled={updating || !userHasBook}
+                variant="outline"
+              >
+                {updating ? "Updating..." : "Check in"}
+              </Button>
+            </div>
+            {!book.available && !userHasBook && (
+              <p className="text-xs text-slate-500">Checked out by another user.</p>
+            )}
           </div>
         </div>
 
