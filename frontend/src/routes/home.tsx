@@ -133,7 +133,7 @@ export default function HomePage() {
           <p className="text-slate-400 text-sm">© 2026 Brandon Hoggatt. Built with Spring & React.</p>
           <div className="flex gap-6 text-slate-400 text-sm">
             {/* TODO add in links to the documentation and github */}
-            <a href="#" className="hover:text-blue-600">API Documentation</a>
+            <a href="http://localhost:8080/swagger-ui/index.html" className="hover:text-blue-600">API Documentation</a>
             <a href="https://github.com/brandon-hog/library-spring-react" className="hover:text-blue-600">GitHub</a>
           </div>
         </div>
