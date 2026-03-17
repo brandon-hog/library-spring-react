@@ -1,5 +1,5 @@
-import { Outlet, useLocation, useNavigate, Link } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { Outlet, useLocation, useNavigate, Link, useLoaderData } from "react-router-dom";
+import { useMemo } from "react";
 import {
   Library,
   BookOpen,
@@ -11,7 +11,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { fetchMe, type MeResponse } from "@/api/auth";
 import {
   Sidebar,
   SidebarContent,
@@ -25,8 +24,10 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import type { LoaderWithMeResult } from "@/router/loaders";
 
 export default function AppLayout() {
+  const loaderData = useLoaderData<LoaderWithMeResult>();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -35,17 +36,7 @@ export default function AppLayout() {
     location.pathname.startsWith("/my-book") ||
     location.pathname.startsWith("/admin");
 
-  const [me, setMe] = useState<MeResponse | null>(null);
-  const isAdmin = useMemo(() => me?.role === "ADMIN", [me?.role]);
-
-  useEffect(() => {
-    if (!isAppRoute) return;
-    fetchMe()
-      .then(setMe)
-      .catch(() => {
-        setMe(null);
-      });
-  }, [isAppRoute]);
+  const isAdmin = useMemo(() => loaderData.me?.role === "ADMIN", [loaderData.me?.role]);
 
   const handleLogout = async () => {
     navigate("/login");

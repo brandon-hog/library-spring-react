@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Outlet } from "react-router-dom";
 import AppLayout from "./routes/app-layout";
 import HomePage from "./routes/home";
 import RegisterPage from "./routes/register";
@@ -9,11 +9,12 @@ import MyBookPage from "./routes/my-book.tsx";
 import AdminBooksPage from "./routes/admin-books";
 import AdminBookEditPage from "./routes/admin-book-edit";
 import AdminCheckoutLogPage from "./routes/admin-checkout-log";
+import { requireAdminLoader, requireAuthLoader } from "./router/loaders";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: AppLayout,
+    Component: Outlet,
     children: [
       {
         index: true,
@@ -27,29 +28,41 @@ export const router = createBrowserRouter([
         path: "login",
         Component: LoginPage,
       },
+    ],
+  },
+  {
+    Component: AppLayout,
+    loader: requireAuthLoader,
+    children: [
       {
-        path: "book",
+        path: "/book",
         Component: BookListPage,
       },
       {
-        path: "book/:id",
+        path: "/book/:id",
         Component: BookDetailPage,
       },
       {
-        path: "my-book",
+        path: "/my-book",
         Component: MyBookPage,
       },
       {
-        path: "admin/books",
-        Component: AdminBooksPage,
-      },
-      {
-        path: "admin/books/:id",
-        Component: AdminBookEditPage,
-      },
-      {
-        path: "admin/checkouts",
-        Component: AdminCheckoutLogPage,
+        path: "/admin",
+        loader: requireAdminLoader,
+        children: [
+          {
+            path: "books",
+            Component: AdminBooksPage,
+          },
+          {
+            path: "books/:id",
+            Component: AdminBookEditPage,
+          },
+          {
+            path: "checkouts",
+            Component: AdminCheckoutLogPage,
+          },
+        ],
       },
     ],
   },
