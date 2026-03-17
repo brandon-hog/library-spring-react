@@ -92,7 +92,7 @@ export default function AppLayout() {
         <SidebarFooter className="border-t border-slate-800 bg-slate-900">
           <Button
             variant="outline"
-            className="w-full justify-center bg-black border-none group-data-[state=collapsed]/sidebar-provider:px-0"
+            className="w-full justify-center bg-black hover:bg-slate-800 border-none cursor-pointer"
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4 shrink-0 text-white" />
