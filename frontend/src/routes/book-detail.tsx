@@ -72,7 +72,7 @@ export default function BookDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="p-4 space-y-6">
       <button
         type="button"
         onClick={() => navigate(-1)}
