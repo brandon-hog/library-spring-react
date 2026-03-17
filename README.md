@@ -15,6 +15,7 @@ The application is fully containerized using Docker. Follow these steps to run t
   - [2.1 Front-end](#21-front-end)
   - [2.2 Back-end](#22-back-end)
     - [2.2.1 Server](#221-server)
+      - [2.2.1.1 OpenAPI Docs](#2211-openapi-docs)
     - [2.2.2 Database](#222-database)
         - [2.2.2.1 ER Diagram](#2221-er-diagram)
   - [2.3 Authentication and Authorization](#23-authentication-and-authorization)
@@ -32,11 +33,11 @@ and their logic. Currently, the scope of the project is limited to:
 - Registering/Logging in Users
 - CRUD Operations for Books
 - Checking in/out Books
+- Admin users to moderate the library (create/update/delete).
 
 ## 1.2 Upcoming Features
 In the future, I hope to work more on this and include:
 - Kiosk users for checking in/out books.
-- Admin users to moderate the library.
 - ISBN numbers and categorizing books.
 - Real data imports from books
 
@@ -55,10 +56,18 @@ This project is a Spring Boot app I made to learn Java Spring and other technolo
 Spring Security, Spring Data JPA (Hibernate), and a Postgres Docker container for storing the data.
 
 ### 2.2.1 Server
+
+
 The server is architected using the de-facto Java Spring architecture. It splits responsibilities into 4 different types of classes: Model,
 Repository, Service, and Controller. This structure allows for a clean folder structure, and clear seperation of responsibilities between
 different sections of the code. Additionally, with the automatic dependency injection, the structure allows for a very maintainable and testable
 codebase.
+
+#### 2.2.1.1 OpenAPI Docs
+To view the api routes and openAPI docs, you may click the link at the bottom of the home page, or visit:
+```
+http://{server-ip}:8080/swagger-ui/index.html
+```
 
 ### 2.2.2 Database
 The database being used is a PostgresDB, and the server uses the Spring Data JPA with Hibernate to interact with the Database.
